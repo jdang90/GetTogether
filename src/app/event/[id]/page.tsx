@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Event } from '@/types/events'
 import { Participant } from '@/types/participants'
 import AvailabilityInput from '@/components/event/AvailabilityInput'
+import Link from 'next/link'
 
 export default function EventDetailsPage() {
   const { id } = useParams<{ id: string }>()
@@ -58,6 +59,9 @@ export default function EventDetailsPage() {
         ))}
       </ul>
       <AvailabilityInput eventId={event.id} />
+      <Link href={`/event/${event.id}/results`} className="text-blue-600 underline block mt-4">
+        View Best Dates
+      </Link>
     </div>
   )
 }
