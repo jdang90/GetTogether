@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/supabaseClient'
 
 // Get availability for a participant
 export async function getAvailability(eventId: string, userId: string) {
@@ -19,6 +19,38 @@ export async function getAvailability(eventId: string, userId: string) {
     .eq('is_available', true)
   if (error) throw new Error(error.message)
   return data.map((row: any) => row.date)
+}
+
+export async function calculateBestDates(eventId: string) {
+  // Get all participants for the event
+  const { data: participants, error: participantsError } = await supabase
+    .from('participants')
+    .select('id')
+    .eq('event_id', eventId)
+  if (participantsError) throw new Error(participantsError.message)
+  const participantIds = (participants ?? []).map(p => p.id)
+  if (participantIds.length === 0) return []
+
+  // Get all availability for these participants
+  const { data: availability, error: availError } = await supabase
+    .from('availability')
+    .select('date, participant_id')
+    .in('participant_id', participantIds)
+    .eq('is_available', true)
+  if (availError) throw new Error(availError.message)
+
+  // Count available participants per date
+  const dateCounts: Record<string, number> = {}
+  for (const row of availability ?? []) {
+    dateCounts[row.date] = (dateCounts[row.date] || 0) + 1
+  }
+
+  // Find max count
+  const max = Math.max(0, ...Object.values(dateCounts))
+  // Return all dates with max count
+  return Object.entries(dateCounts)
+    .filter(([_, count]) => count === max)
+    .map(([date]) => date)
 }
 
 // Set availability for a participant (overwrite all)
@@ -48,4 +80,6 @@ export async function setAvailability(eventId: string, userId: string, dates: st
     const { error } = await supabase.from('availability').insert(rows)
     if (error) throw new Error(error.message)
   }
+  
+
 }

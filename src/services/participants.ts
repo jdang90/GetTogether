@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/supabaseClient'
 import { Participant } from '@/types/participants'
 
 // Join event as participant

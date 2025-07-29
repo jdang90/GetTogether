@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase/supabaseClient'
 import { Event } from '@/types/events'
 
 // Create a new event

@@ -40,7 +40,7 @@ export default function InvitePage() {
 
 // Helper to get event by invite token
 async function getEventByToken(token: string) {
-  const { data, error } = await import('@/lib/supabase/client').then(({ supabase }) =>
+  const { data, error } = await import('@/lib/supabase/supabaseClient').then(({ supabase }) =>
     supabase.from('events').select('*').eq('invite_token', token).single()
   )
   if (error || !data) throw new Error('Invalid or expired invite link')

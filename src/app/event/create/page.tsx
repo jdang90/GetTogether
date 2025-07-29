@@ -1,10 +1,8 @@
-```tsx
-// Placeholder for event create page
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/supabaseClient';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function CreateEventPage() {
@@ -94,4 +92,3 @@ export default function CreateEventPage() {
     </div>
   );
 }
-```
