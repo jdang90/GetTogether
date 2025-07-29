@@ -15,8 +15,8 @@ export default function Home() {
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           {!user ? (
             <>
-              <Link href="/(auth)/login" className="rounded-full bg-blue-600 text-white px-4 py-2">Login</Link>
-              <Link href="/(auth)/signup" className="rounded-full bg-gray-200 text-black px-4 py-2">Sign Up</Link>
+              <Link href="/login" className="rounded-full bg-blue-600 text-white px-4 py-2">Login</Link>
+              <Link href="/signup" className="rounded-full bg-gray-200 text-black px-4 py-2">Sign Up</Link>
             </>
           ) : (
             <Link href="/dashboard" className="rounded-full bg-green-600 text-white px-4 py-2">Go to Dashboard</Link>

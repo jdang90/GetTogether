@@ -14,12 +14,13 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
+     e.preventDefault();
     setError('');
     setLoading(true);
     try {
       await signUp(email, password, name);
-      router.push('/dashboard');
+      // Redirect to login page after signup
+      router.push('/login?signup=success');
     } catch (err: any) {
       setError('Signup failed');
     }
@@ -29,9 +30,16 @@ export default function SignupPage() {
   const handleGoogleSignup = async () => {
     setError('');
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-    if (error) setError(error.message);
-    setLoading(false);
+  
+    const { error } = await supabase.auth.signInWithOAuth({ 
+      provider: 'google'
+      // Remove the custom redirectTo completely
+    });
+    
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
   };
 
   return (
