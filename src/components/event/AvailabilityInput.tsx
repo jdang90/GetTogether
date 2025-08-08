@@ -16,8 +16,6 @@ export default function AvailabilityInput({ eventId }: Props) {
 
   // Fetch allowed date range from event (optional: pass as props for optimization)
   useEffect(() => {
-    // For MVP, just allow manual input or fetch from event if needed
-    // Here, we assume a fixed range for demo
     const today = new Date()
     const range = Array.from({ length: 7 }, (_, i) => {
       const d = new Date(today)
@@ -29,7 +27,7 @@ export default function AvailabilityInput({ eventId }: Props) {
 
   useEffect(() => {
     if (user) {
-      getAvailability(eventId, user.id).then(setSelected)
+      getAvailability(eventId, user.id).then(setSelected).catch(() => setSelected([]))
     }
   }, [eventId, user])
 
@@ -44,8 +42,9 @@ export default function AvailabilityInput({ eventId }: Props) {
     setError('')
     try {
       await setAvailability(eventId, user!.id, selected)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to save availability'
+      setError(message)
     }
     setLoading(false)
   }
@@ -58,7 +57,7 @@ export default function AvailabilityInput({ eventId }: Props) {
           <button
             key={date}
             type="button"
-            className={`px-2 py-1 rounded border ${selected.includes(date) ? 'bg-blue-500 text-white' : 'bg-white'}`}
+            className={`px-2 py-1 rounded border ${selected.includes(date) ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
             onClick={() => toggleDate(date)}
           >
             {date}

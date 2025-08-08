@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { getEvent } from '@/services/events'
 import { joinEvent } from '@/services/participants'
 import { useAuth } from '@/hooks/useAuth'
 
@@ -21,11 +20,12 @@ export default function InvitePage() {
         const event = await getEventByToken(token)
         setEventId(event.id)
         if (user) {
-          await joinEvent(event.id, { user_id: user.id, name: user.email })
+          await joinEvent(event.id, { user_id: user.id, name: user.email || undefined })
           router.push(`/event/${event.id}`)
         }
-      } catch (err: any) {
-        setError(err.message)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Invalid or expired invite link'
+        setError(message)
       }
       setLoading(false)
     }
@@ -44,5 +44,5 @@ async function getEventByToken(token: string) {
     supabase.from('events').select('*').eq('invite_token', token).single()
   )
   if (error || !data) throw new Error('Invalid or expired invite link')
-  return data
+  return data as { id: string }
 }

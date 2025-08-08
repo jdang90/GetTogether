@@ -6,22 +6,14 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   
   if (code) {
-    // Create a new supabase client for the callback
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
     
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    
-    if (!error) {
-      // Always redirect to dashboard after successful OAuth
-      const dashboardUrl = new URL('/dashboard', origin);
-      return NextResponse.redirect(dashboardUrl.toString());
-    }
+    await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // Fallback - redirect to login
-  const loginUrl = new URL('/login', origin);
-  return NextResponse.redirect(loginUrl.toString());
+  // Always redirect to a client-side handler
+  return NextResponse.redirect(`${origin}/auth/success`);
 }

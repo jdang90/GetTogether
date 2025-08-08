@@ -44,14 +44,14 @@ export default function DashboardPage() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-lg">Please log in to view your dashboard.</div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-0">
       {/* Header with Sign Out */}
       <div className="flex justify-between items-center mb-8">
         <div>
@@ -92,7 +92,7 @@ export default function DashboardPage() {
       
       {!loading && events.length === 0 && !error && (
         <div className="text-center py-8">
-          <p className="text-gray-600">You haven't created or joined any events yet.</p>
+          <p className="text-gray-600">You haven&apos;t created or joined any events yet.</p>
           <Link 
             href="/event/create" 
             className="text-blue-600 hover:underline mt-2 inline-block"
@@ -106,8 +106,15 @@ export default function DashboardPage() {
         <div className="grid gap-4">
           {events.map(event => (
             <div key={event.id} className="bg-white shadow rounded-lg p-4 border">
-              <h3 className="text-lg font-semibold">{event.title}</h3>
-              {/* Add more event details here as needed */}
+              <Link href={`/event/${event.id}`} className="text-lg font-semibold text-blue-700 hover:underline">
+                {event.title}
+              </Link>
+              {event.description && (
+                <p className="text-gray-600 mt-1">{event.description}</p>
+              )}
+              <p className="text-xs text-gray-500 mt-2">
+                {event.start_date_range} – {event.end_date_range}
+              </p>
             </div>
           ))}
         </div>

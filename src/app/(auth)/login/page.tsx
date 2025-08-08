@@ -1,11 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase/supabaseClient';
 import Link from 'next/link';
 
-export default function LoginPage() {
+function LoginContent() {
   const { signIn } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -22,7 +22,7 @@ export default function LoginPage() {
     try {
       await signIn(email, password);
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch {
       setError('Invalid email or password');
     }
     setLoading(false);
@@ -89,11 +89,19 @@ export default function LoginPage() {
       </div>
 
       <p className="text-center mt-4 text-sm text-gray-600">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Link href="/signup" className="text-blue-600 hover:underline">
           Sign up here
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="max-w-md mx-auto mt-16 p-6">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

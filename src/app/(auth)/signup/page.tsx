@@ -21,7 +21,7 @@ export default function SignupPage() {
       await signUp(email, password, name);
       // Redirect to login page after signup
       router.push('/login?signup=success');
-    } catch (err: any) {
+    } catch {
       setError('Signup failed');
     }
     setLoading(false);
